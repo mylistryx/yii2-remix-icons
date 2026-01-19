@@ -3,6 +3,7 @@
 namespace yii\ri;
 
 use yii\helpers\Html;
+use function array_unique;
 use function implode;
 
 abstract class Icon
@@ -32,6 +33,8 @@ abstract class Icon
     protected string $style;
     protected ?string $content = null;
     protected ?string $size = null;
+
+    protected array $addClasses = [];
 
     public static function i(string $icon, ?string $content = null, ?string $size = null): static
     {
@@ -80,6 +83,13 @@ abstract class Icon
         return $this;
     }
 
+    public function addClass(string $class): static
+    {
+        $this->addClasses[] = $class;
+
+        return $this;
+    }
+
     public function __toString(): string
     {
         $size = null;
@@ -96,10 +106,13 @@ abstract class Icon
             $this->style,
         ]);
 
+        $addClasses = array_filter(array_unique($this->addClasses));
+
         return Html::tag('i', $this->content ?? '', [
             'class' => [
                 $class,
                 $size,
+                $addClasses,
             ],
         ]);
     }
