@@ -3,6 +3,7 @@
 namespace yii\ri;
 
 use yii\helpers\Html;
+use function array_filter;
 use function array_unique;
 use function implode;
 
@@ -90,30 +91,33 @@ abstract class Icon
         return $this;
     }
 
+    public function addClasses(array $classes = []): static
+    {
+        $this->addClasses = array_merge($this->addClasses, $classes);
+
+        return $this;
+    }
+
     public function __toString(): string
     {
+        $classes = $this->addClasses;
+
         $size = null;
         if ($this->size) {
-            $size = implode('-', [
+            $classes[] = implode('-', [
                 self::BASE_CLASS,
                 $this->size,
             ]);
         }
 
-        $class = implode('-', [
+        $classes[] = implode('-', [
             self::BASE_CLASS,
             $this->name,
             $this->style,
         ]);
 
-        $addClasses = array_filter(array_unique($this->addClasses));
-
         return Html::tag('i', $this->content ?? '', [
-            'class' => [
-                $class,
-                $size,
-                $addClasses,
-            ],
+            'class' => array_filter(array_unique($classes)),
         ]);
     }
 }
