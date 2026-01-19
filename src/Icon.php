@@ -11,6 +11,8 @@ abstract class Icon
 {
     public const BASE_CLASS = 'ri';
 
+    private const ITEM_TAG = 'i';
+
     protected const STYLE_LINE = 'line';
     protected const STYLE_FILL = 'fill';
 
@@ -102,7 +104,6 @@ abstract class Icon
     {
         $classes = $this->addClasses;
 
-        $size = null;
         if ($this->size) {
             $classes[] = implode('-', [
                 self::BASE_CLASS,
@@ -116,7 +117,7 @@ abstract class Icon
             $this->style,
         ]);
 
-        return Html::tag('i', $this->content ?? '', [
+        return Html::tag(self::ITEM_TAG, $this->content ?? '', [
             'class' => array_filter(array_unique($classes)),
         ]);
     }
